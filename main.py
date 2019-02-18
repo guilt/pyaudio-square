@@ -1,23 +1,38 @@
-import audioop
-import ossaudiodev
+#!/usr/bin/python2.6
 from collections import deque
+import pyaudio
+import wave
+import sys
+import audioop
+
+CHUNK = 2048
+FORMAT = pyaudio.paInt16
+CHANNELS = 1
+RATE = 44100
+RECORD_SECONDS = 5
 
 THRESHOLD_FACTOR = 3.5
 FIRST_PEAK_FACTOR = 0.8
 SECOND_PEAK_FACTOR = 0.5
 
 def get_chunk(src, bias):
-    data = audioop.bias(src.read(10000), 2, bias)
+    all = src.read(10000)
+    data = audioop.bias(all, 2, bias)
     return data, audioop.maxpp(data, 2)
     
-def get_swipe(dev='/dev/audio'):
-    audio = ossaudiodev.open(dev, 'r')
-    audio.setparameters(ossaudiodev.AFMT_S16_LE, 1, 44100)
+def get_swipe():
+    p = pyaudio.PyAudio()
+
+    stream = p.open(format = FORMAT,
+                channels = CHANNELS,
+                rate = RATE,
+                input = True,
+                frames_per_buffer = CHUNK)
     
     baselines = deque([2**15] * 4)
     bias = 0
     while 1:
-        data, power = get_chunk(audio, bias)
+        data, power = get_chunk(stream, bias)
         
         baseline = sum(baselines) / len(baselines) * THRESHOLD_FACTOR
         print power, baseline, power / (baseline or 1)
@@ -26,7 +41,7 @@ def get_swipe(dev='/dev/audio'):
         while power > baseline:
             print power, baseline, power / (baseline or 1), '*'
             chunks.append(data)
-            data, power = get_chunk(audio, bias)
+            data, power = get_chunk(stream, bias)
 
         if len(chunks) > 1:
             data = old_data + ''.join(chunks) + data

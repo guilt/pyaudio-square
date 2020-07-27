@@ -2,22 +2,7 @@
 # pylint: disable=C0111,R1708
 
 """
-Thank you jason111o!
-
-SUGGESTION:
-    When running in a terminal it may be easier to run in a loop until it reads the card
-    When testing, the older Square Card reader worked more often than the newer version.
-
-    while true; do
-        ./square_reader && break
-    done
-
-When installing dependencies be sure to install for python3
-on Debian, "sudo apt install python3-pyaudio"
-
-If using Pip, "pip install -r requirements.txt"
-
-Check errors when attempting to run to identify missing dependencies.
+square_reader.py
 """
 from __future__ import print_function
 

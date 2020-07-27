@@ -1,5 +1,8 @@
 # PyAudio Square Reader
 
+It was ported by me to a working *pyaudio* port, and test with help from volunteers. Thank you!
+It will help you read Credit Cards yourself.
+
 # Install Requirements
 
 ```bash
@@ -13,7 +16,7 @@ Square Card reader worked more often than the newer version.
 
 ```bash
     while true; do
-        ./square_reader && break
+        ./square_reader.py && break
     done
 ```
 # Feedback
